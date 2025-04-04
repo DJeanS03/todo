@@ -14,7 +14,12 @@ export function RenderizarTasks() {
       {tasks.map((task) => (
         <div
           key={task.id}
-          className="flex items-center gap-4 bg-zinc-800 px-4 py-2 rounded-md justify-between"
+          className={`flex items-center gap-4  px-4 py-2 rounded-md justify-between transition-opacity duration-300 ${
+            task.isCompleted ? "bg-zinc-600 opacity-60" : "bg-zinc-800"
+          }`}
+          onClick={() =>
+            task.id && alterarTaskStatus(task.id, !task.isCompleted)
+          }
         >
           <input
             type="checkbox"
@@ -25,7 +30,7 @@ export function RenderizarTasks() {
             }
           />
 
-          <span>{task.title}</span>
+          <span className={`${task.isCompleted ? "line-through" : ""}`}>{task.title}</span>
           <div className="flex gap-2 items-center">
             <LuPencil
               className="hover:text-blue-500 transition duration-300"
@@ -37,8 +42,8 @@ export function RenderizarTasks() {
               onClick={() => task.id && deletarTask(task.id)}
             />
           </div>
-        </div>  
+        </div>
       ))}
     </div>
-  );  
+  );
 }
