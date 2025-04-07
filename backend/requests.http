@@ -1,3 +1,4 @@
+###
 GET http://localhost:3001/tasks
 
 ###
@@ -5,8 +6,9 @@ POST  http://localhost:3001/tasks
 Content-Type: application/json
   
 {
-  "title": "Task 2",
-  "isCompleted": false
+  "title": "Task 2TESTE",
+  "isCompleted": false,
+  "priority": "HIGH"
 }
 
 ###

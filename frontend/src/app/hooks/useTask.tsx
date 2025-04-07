@@ -133,7 +133,11 @@ const API_URL = "http://localhost:3001/tasks";
 
 export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [task, setTask] = useState<Task>({ title: "", isCompleted: false });
+  const [task, setTask] = useState<Task>({
+    title: "",
+    isCompleted: false,
+    priority: "NONE",
+  });
 
   useEffect(() => {
     obterTasks();
@@ -142,7 +146,9 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const obterTasks = async () => {
     const resp = await fetch(API_URL);
     const tasks = await resp.json();
-    tasks.sort((a: Task, b: Task) => Number(a.isCompleted) - Number(b.isCompleted));
+    tasks.sort(
+      (a: Task, b: Task) => Number(a.isCompleted) - Number(b.isCompleted)
+    );
     setTasks(tasks);
   };
 
@@ -154,7 +160,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
         "Content-Type": "application/json",
       },
     });
-    setTask({ title: "", isCompleted: false });
+    setTask({ title: "", isCompleted: false, priority: "NONE" });
     await obterTasks();
   };
 
@@ -166,7 +172,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
         "Content-Type": "application/json",
       },
     });
-    setTask({ title: "", isCompleted: false });
+    setTask({ title: "", isCompleted: false, priority: "NONE" });
     await obterTasks();
   };
 
@@ -213,4 +219,3 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
 }
 
 export const useTasks = () => useContext(TaskContext);
-
