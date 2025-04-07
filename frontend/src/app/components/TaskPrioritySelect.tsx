@@ -22,7 +22,7 @@ export default function TaskPrioritySelect() {
             task.priority === "NONE"
               ? "zinc-500"
               : task.priority === "LOW"
-              ? "blue-600"
+              ? "blue-500"
               : task.priority === "MEDIUM"
               ? "yellow-500"
               : "red-500"
@@ -36,14 +36,14 @@ export default function TaskPrioritySelect() {
             className="option px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center justify-start w-full"
             onClick={() => handleSelectOption("NONE")}
           >
-            <IoIosFlag className="text-zinc-200 mr-1" />
+            <IoIosFlag className="text-zinc-500 mr-1" />
             Nenhuma
           </div>
           <div
             className="option px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center justify-start w-full"
             onClick={() => handleSelectOption("LOW")}
           >
-            <IoIosFlag className="text-green-500 mr-1" />
+            <IoIosFlag className="text-blue-500 mr-1" />
             Baixa
           </div>
           <div
