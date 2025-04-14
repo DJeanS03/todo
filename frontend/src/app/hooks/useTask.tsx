@@ -181,16 +181,24 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   };
 
   const editarTask = async () => {
+    if (!task.id) {
+      console.error("Task ID está indefinido.");
+      return;
+    }
+  
     await fetch(`${API_URL}/${task.id}`, {
       method: "PATCH",
       body: JSON.stringify(task),
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json", 
       },
     });
+  
     setTask({ title: "", isCompleted: false, priority: "NONE" });
     await obterTasks();
+    console.log("task atual para edição:", task);
   };
+  
 
   const deletarTask = async (id: number) => {
     await fetch(`${API_URL}/${id}`, {
