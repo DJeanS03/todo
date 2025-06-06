@@ -1,9 +1,10 @@
 "use client";
-import { FaRegTrashAlt } from "react-icons/fa";
+import { FaCheck, FaRegTrashAlt } from "react-icons/fa";
 import { LuPencil } from "react-icons/lu";
 import { useTasks } from "../hooks/useTask";
 import { IoIosFlag } from "react-icons/io";
 import { useState } from "react";
+import TaskPrioritySelect from "./TaskPrioritySelect";
 
 export function RenderizarTasks() {
   const { tasks, alterarTaskStatus, deletarTask, editarTask, setTask } =
@@ -74,7 +75,7 @@ export function RenderizarTasks() {
           >
             <input
               type="checkbox"
-              className="h-5 w-5"
+              className="form-checkbox h-5 w-5 text-blue-500 focus:ring-blue-500 transition duration-300"
               checked={task.isCompleted}
               onChange={() =>
                 task.id && alterarTaskStatus(task.id, !task.isCompleted)
@@ -82,32 +83,38 @@ export function RenderizarTasks() {
             />
 
             {isEditing ? (
-              <input
-                value={tempTitle}
-                onChange={(e) => setTempTitle(e.target.value)}
-                className="bg-transparent border-b border-zinc-400 text-white"
-              />
+              <div className="flex flex-col gap-1">
+                <input
+                  value={tempTitle}
+                  onChange={(e) => setTempTitle(e.target.value)}
+                  className={`bg-transparent border-b text-white px-1 py-0.5 focus:outline-none ${
+                    task.isCompleted
+                      ? "border-yellow-400 text-yellow-300"
+                      : "border-zinc-400"
+                  }`}
+                />
+
+                {task.isCompleted && (
+                  <p className="text-yellow-400 text-xs italic">
+                    * Essa tarefa já foi concluída. Edite com cautela.
+                  </p>
+                )}
+              </div>
             ) : (
-              <span className={`${task.isCompleted ? "line-through" : ""}`}>
+              <span
+                className={`${
+                  task.isCompleted ? "line-through text-zinc-400" : "text-white"
+                }`}
+              >
                 {task.title}
               </span>
             )}
 
             {isEditing ? (
-              <select
-                value={tempPriority}
-                onChange={(e) =>
-                  setTempPriority(
-                    e.target.value as "HIGH" | "MEDIUM" | "LOW" | "NONE"
-                  )
-                }
-                className="bg-zinc-700 text-white px-1 rounded"
-              >
-                <option value="NONE">Nenhuma</option>
-                <option value="LOW">Baixa</option>
-                <option value="MEDIUM">Média</option>
-                <option value="HIGH">Alta</option>
-              </select>
+              <TaskPrioritySelect
+                priority={tempPriority}
+                onChange={setTempPriority}
+              />
             ) : (
               <IoIosFlag
                 className={`${getPriorityColor(task.priority)} text-xl`}
@@ -120,14 +127,21 @@ export function RenderizarTasks() {
                   onClick={() => task.id && salvarEdicao(task.id)}
                   className="text-green-400"
                 >
-                  OK
+                  <FaCheck
+                    className={`transition duration-300 ${
+                      task.title.trim()
+                        ? "text-green-400 hover:text-green-600 cursor-pointer"
+                        : "text-green-400 opacity-50 cursor-not-allowed pointer-events-none"
+                    }`}
+                    onClick={() => task.id && salvarEdicao(task.id)}
+                    title="Salvar Edição"
+                  />
                 </button>
               ) : (
                 <LuPencil
                   className="hover:text-blue-500 transition duration-300"
                   onClick={() =>
-                    task.id &&
-                    iniciarEdicao(task.id, task.title, task.priority)
+                    task.id && iniciarEdicao(task.id, task.title, task.priority)
                   }
                 />
               )}
