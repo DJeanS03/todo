@@ -5,6 +5,7 @@ import { useTasks } from "../hooks/useTask";
 import { IoIosFlag } from "react-icons/io";
 import { useState } from "react";
 import TaskPrioritySelect from "./TaskPrioritySelect";
+import ConfirmModal from "./ConfirmModal";
 
 export function RenderizarTasks() {
   const { tasks, alterarTaskStatus, deletarTask, editarTask, setTask } =
@@ -15,6 +16,10 @@ export function RenderizarTasks() {
   const [tempPriority, setTempPriority] = useState<
     "HIGH" | "MEDIUM" | "LOW" | "NONE"
   >("NONE");
+
+  const [showModal, setShowModal] = useState(false);
+  const [edicaoPendenteId, setEdicaoPendenteId] = useState<number | null>(null);
+  const [manterConcluida, setManterConcluida] = useState(true);
 
   const getPriorityColor = (
     priority: "HIGH" | "MEDIUM" | "LOW" | "NONE" | undefined
@@ -45,21 +50,37 @@ export function RenderizarTasks() {
     const taskOriginal = tasks.find((t) => t.id === id);
     if (!taskOriginal) return;
 
-    setTask({
+    if (taskOriginal.isCompleted) {
+      setShowModal(true);
+      setEdicaoPendenteId(id);
+      return;
+    }
+
+    await editarTask({
       id,
       title: tempTitle,
       isCompleted: taskOriginal.isCompleted,
       priority: tempPriority,
     });
 
+    setEditandoId(null);
+  };
+
+  const confirmarEdicaoComStatus = async () => {
+    if (edicaoPendenteId === null) return;
+    const taskOriginal = tasks.find((t) => t.id === edicaoPendenteId);
+    if (!taskOriginal) return;
+
     await editarTask({
-      id,
+      id: edicaoPendenteId,
       title: tempTitle,
-      isCompleted: false,
+      isCompleted: manterConcluida ? true : false,
       priority: tempPriority,
     });
 
     setEditandoId(null);
+    setEdicaoPendenteId(null);
+    setShowModal(false);
   };
 
   return (
@@ -154,6 +175,19 @@ export function RenderizarTasks() {
           </div>
         );
       })}
+      <ConfirmModal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+          setEdicaoPendenteId(null);
+        }}
+        onConfirm={async () => {
+          setManterConcluida(false); // Define para ativar a tarefa
+          await confirmarEdicaoComStatus();
+        }}
+        title="Deseja ativar a tarefa com essa edição?"
+        description="Essa tarefa está marcada como concluída. Deseja ativá-la após editar?"
+      />
     </div>
   );
 }
