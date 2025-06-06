@@ -1,13 +1,18 @@
 import React, { useState } from "react";
 import { IoIosFlag } from "react-icons/io";
-import { useTasks } from "../hooks/useTask";
 
-export default function TaskPrioritySelect() {
-  const { task, setTask } = useTasks(); 
+type Priority = "NONE" | "LOW" | "MEDIUM" | "HIGH";
+
+interface TaskPrioritySelectProps {
+  priority: Priority;
+  onChange: (priority: Priority) => void;
+}
+
+export default function TaskPrioritySelect({ priority, onChange }: TaskPrioritySelectProps) {
   const [showOptions, setShowOptions] = useState(false);
 
-  const handleSelectOption = (priority: "NONE" | "LOW" | "MEDIUM" | "HIGH") => {
-    setTask({ ...task, priority });
+  const handleSelectOption = (newPriority: Priority) => {
+    onChange(newPriority); // avisa quem está usando o componente
     setShowOptions(false);
   };
 
@@ -19,11 +24,11 @@ export default function TaskPrioritySelect() {
       >
         <IoIosFlag
           className={`text-${
-            task.priority === "NONE"
+            priority === "NONE"
               ? "zinc-500"
-              : task.priority === "LOW"
+              : priority === "LOW"
               ? "blue-500"
-              : task.priority === "MEDIUM"
+              : priority === "MEDIUM"
               ? "yellow-500"
               : "red-500"
           }`}
@@ -54,7 +59,7 @@ export default function TaskPrioritySelect() {
             Média
           </div>
           <div
-            className="option px-3 y-2 cursor-pointer hover:bg-gray-200 flex items-center justify-start w-full"
+            className="option px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center justify-start w-full"
             onClick={() => handleSelectOption("HIGH")}
           >
             <IoIosFlag className="text-red-500 mr-1" />

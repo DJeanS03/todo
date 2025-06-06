@@ -14,17 +14,21 @@ export function RenderizarFormTask() {
         className="border border-zinc-800 px-2 py-1 rounded-md"
       />
 
-      <TaskPrioritySelect />
+      <TaskPrioritySelect
+        priority={task.priority}
+        onChange={(newPriority) =>
+          setTask({ ...task, priority: newPriority })
+        }
+      />
 
       {!task.id && (
-  <button
-    onClick={criarTask}
-    className="bg-zinc-800 px-2 py-1 rounded-md text-white"
-  >
-    Criar
-  </button>
-)}
-
+        <button
+          onClick={criarTask}
+          className="bg-zinc-800 px-2 py-1 rounded-md text-white"
+        >
+          Criar
+        </button>
+      )}
     </div>
   );
 }
