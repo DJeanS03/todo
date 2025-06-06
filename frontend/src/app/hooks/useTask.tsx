@@ -113,7 +113,13 @@ export const useTasks = () => {
  */
 "use client";
 
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import { Task } from "../types/Task";
 
 interface TaskContextType {
@@ -121,13 +127,15 @@ interface TaskContextType {
   task: Task;
   setTask: React.Dispatch<React.SetStateAction<Task>>;
   criarTask: () => Promise<void>;
-  editarTask: () => Promise<void>;
+  editarTask: (taskParaEditar: Task) => Promise<void>;
   deletarTask: (id: number) => Promise<void>;
   alterarTaskStatus: (id: number, isCompleted: boolean) => Promise<void>;
   obterTaskPorId: (id: number) => Promise<void>;
 
   sortType: "ALPHABETICAL" | "PRIORITY";
-  setSortType: React.Dispatch<React.SetStateAction<"ALPHABETICAL" | "PRIORITY">>;
+  setSortType: React.Dispatch<
+    React.SetStateAction<"ALPHABETICAL" | "PRIORITY">
+  >;
 }
 
 const TaskContext = createContext({} as TaskContextType);
@@ -141,26 +149,28 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     isCompleted: false,
     priority: "NONE",
   });
-  const [sortType, setSortType] = useState<"ALPHABETICAL" | "PRIORITY">("PRIORITY");
+  const [sortType, setSortType] = useState<"ALPHABETICAL" | "PRIORITY">(
+    "PRIORITY"
+  );
 
   const obterTasks = useCallback(async () => {
     const resp = await fetch(API_URL);
     const tasks = await resp.json();
-  
+
     const prioridadeNumerica = { NONE: 0, LOW: 1, MEDIUM: 2, HIGH: 3 };
-  
+
     tasks.sort((a: Task, b: Task) => {
       if (a.isCompleted !== b.isCompleted) {
         return a.isCompleted ? 1 : -1;
       }
-  
+
       if (sortType === "ALPHABETICAL") {
         return a.title.localeCompare(b.title);
       } else {
         return prioridadeNumerica[b.priority] - prioridadeNumerica[a.priority];
       }
     });
-  
+
     setTasks(tasks);
   }, [sortType]);
 
@@ -180,25 +190,17 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     await obterTasks();
   };
 
-  const editarTask = async () => {
-    if (!task.id) {
-      console.error("Task ID está indefinido.");
-      return;
-    }
-  
-    await fetch(`${API_URL}/${task.id}`, {
+  const editarTask = async (taskParaEditar: Task) => {
+    await fetch(`${API_URL}/${taskParaEditar.id}`, {
       method: "PATCH",
-      body: JSON.stringify(task),
+      body: JSON.stringify(taskParaEditar),
       headers: {
-        "Content-Type": "application/json", 
+        "Content-Type": "application/json",
       },
     });
-  
     setTask({ title: "", isCompleted: false, priority: "NONE" });
     await obterTasks();
-    console.log("task atual para edição:", task);
   };
-  
 
   const deletarTask = async (id: number) => {
     await fetch(`${API_URL}/${id}`, {

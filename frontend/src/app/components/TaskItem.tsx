@@ -6,14 +6,8 @@ import { IoIosFlag } from "react-icons/io";
 import { useState } from "react";
 
 export function RenderizarTasks() {
-  const {
-    task,
-    tasks,
-    alterarTaskStatus,
-    deletarTask,
-    editarTask,
-    setTask,
-  } = useTasks();
+  const { tasks, alterarTaskStatus, deletarTask, editarTask, setTask } =
+    useTasks();
 
   const [editandoId, setEditandoId] = useState<number | null>(null);
   const [tempTitle, setTempTitle] = useState("");
@@ -36,7 +30,11 @@ export function RenderizarTasks() {
     }
   };
 
-  const iniciarEdicao = (id: number, title: string, priority: "HIGH" | "MEDIUM" | "LOW" | "NONE") => {
+  const iniciarEdicao = (
+    id: number,
+    title: string,
+    priority: "HIGH" | "MEDIUM" | "LOW" | "NONE"
+  ) => {
     setEditandoId(id);
     setTempTitle(title);
     setTempPriority(priority);
@@ -45,19 +43,23 @@ export function RenderizarTasks() {
   const salvarEdicao = async (id: number) => {
     const taskOriginal = tasks.find((t) => t.id === id);
     if (!taskOriginal) return;
-  
+
     setTask({
       id,
       title: tempTitle,
       isCompleted: taskOriginal.isCompleted,
       priority: tempPriority,
     });
-  
-    await editarTask();
+
+    await editarTask({
+      id,
+      title: tempTitle,
+      isCompleted: false,
+      priority: tempPriority,
+    });
+
     setEditandoId(null);
-    console.log("Editando task:", task);
   };
-  
 
   return (
     <div className="flex flex-col gap-2">
@@ -95,7 +97,9 @@ export function RenderizarTasks() {
               <select
                 value={tempPriority}
                 onChange={(e) =>
-                  setTempPriority(e.target.value as "HIGH" | "MEDIUM" | "LOW" | "NONE")
+                  setTempPriority(
+                    e.target.value as "HIGH" | "MEDIUM" | "LOW" | "NONE"
+                  )
                 }
                 className="bg-zinc-700 text-white px-1 rounded"
               >
@@ -105,7 +109,9 @@ export function RenderizarTasks() {
                 <option value="HIGH">Alta</option>
               </select>
             ) : (
-              <IoIosFlag className={`${getPriorityColor(task.priority)} text-xl`} />
+              <IoIosFlag
+                className={`${getPriorityColor(task.priority)} text-xl`}
+              />
             )}
 
             <div className="flex gap-2 items-center">
@@ -120,7 +126,8 @@ export function RenderizarTasks() {
                 <LuPencil
                   className="hover:text-blue-500 transition duration-300"
                   onClick={() =>
-                    task.id && iniciarEdicao(task.id, task.title, task.priority)
+                    task.id &&
+                    iniciarEdicao(task.id, task.title, task.priority)
                   }
                 />
               )}
