@@ -3,12 +3,12 @@ import { FaCheck, FaRegTrashAlt } from "react-icons/fa";
 import { LuPencil } from "react-icons/lu";
 import { useTasks } from "../hooks/useTask";
 import { IoIosFlag } from "react-icons/io";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskPrioritySelect from "./TaskPrioritySelect";
 import ConfirmModal from "./ConfirmModal";
 
 export function RenderizarTasks() {
-  const { tasks, alterarTaskStatus, deletarTask, editarTask, setTask } =
+  const { tasks, alterarTaskStatus, deletarTask, editarTask } =
     useTasks();
 
   const [editandoId, setEditandoId] = useState<number | null>(null);
@@ -20,6 +20,17 @@ export function RenderizarTasks() {
   const [showModal, setShowModal] = useState(false);
   const [edicaoPendenteId, setEdicaoPendenteId] = useState<number | null>(null);
   const [manterConcluida, setManterConcluida] = useState(true);
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setEditandoId(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+    return () => window.removeEventListener("keydown", handleEsc);
+  }, []);
 
   const getPriorityColor = (
     priority: "HIGH" | "MEDIUM" | "LOW" | "NONE" | undefined
