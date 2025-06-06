@@ -16,15 +16,19 @@ export function RenderizarFormTask() {
 
       <TaskPrioritySelect
         priority={task.priority}
-        onChange={(newPriority) =>
-          setTask({ ...task, priority: newPriority })
-        }
+        onChange={(newPriority) => setTask({ ...task, priority: newPriority })}
       />
 
       {!task.id && (
         <button
           onClick={criarTask}
-          className="bg-zinc-800 px-2 py-1 rounded-md text-white"
+          disabled={!task.title.trim()}
+          className={`px-2 py-1 rounded-md text-white transition-colors duration-300
+            ${
+              task.title.trim()
+                ? "bg-zinc-800 hover:bg-zinc-700 cursor-pointer"
+                : "bg-zinc-400 cursor-not-allowed"
+            }`}
         >
           Criar
         </button>
