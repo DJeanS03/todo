@@ -8,8 +8,7 @@ import TaskPrioritySelect from "./TaskPrioritySelect";
 import ConfirmModal from "./ConfirmModal";
 
 export function RenderizarTasks() {
-  const { tasks, alterarTaskStatus, deletarTask, editarTask } =
-    useTasks();
+  const { tasks, alterarTaskStatus, deletarTask, editarTask } = useTasks();
 
   const [editandoId, setEditandoId] = useState<number | null>(null);
   const [tempTitle, setTempTitle] = useState("");
@@ -124,6 +123,11 @@ export function RenderizarTasks() {
                       ? "border-yellow-400 text-yellow-300"
                       : "border-zinc-400"
                   }`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && typeof task.id === "number") {
+                      salvarEdicao(task.id);
+                    }
+                  }}
                 />
 
                 {task.isCompleted && (
