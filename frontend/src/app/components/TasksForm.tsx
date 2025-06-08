@@ -12,6 +12,15 @@ export function RenderizarFormTask() {
         onChange={(e) => setTask({ ...task, title: e.target.value })}
         placeholder="Tarefa"
         className="border border-zinc-800 px-2 py-1 rounded-md"
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            criarTask();
+            (window as Window & { showToast?: (title: string, message: string) => void }).showToast?.(
+              "Tarefa criada",
+              "Sua nova tarefa foi adicionada."
+            );
+          }
+        }}
       />
 
       <TaskPrioritySelect

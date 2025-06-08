@@ -8,6 +8,7 @@ import {
   useCallback,
 } from "react";
 import { Task } from "../types/Task";
+import toast from "react-hot-toast";
 
 interface TaskContextType {
   tasks: Task[];
@@ -67,7 +68,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
 
   const criarTask = async () => {
     if (!task.title.trim()) {
-      alert("O título da tarefa não pode estar vazio!");
+      toast.error("O título da tarefa não pode estar vazio.");
       return;
     }
     await fetch(`${API_URL}`, {
@@ -79,13 +80,17 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     });
     setTask({ title: "", isCompleted: false, priority: "NONE" });
     await obterTasks();
+
+    toast("Nova tarefa criada!", {
+      icon: "✅",
+    });
   };
 
   const editarTask = async (taskParaEditar: Task) => {
     const trimmedTitle = taskParaEditar.title.trim();
 
     if (!trimmedTitle) {
-      alert("O título da tarefa não pode estar vazio!");
+      toast.error("O título da tarefa não pode estar vazio.");
       return;
     }
 
@@ -102,6 +107,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
 
     setTask({ title: "", isCompleted: false, priority: "NONE" });
     await obterTasks();
+    toast.success("Tarefa atualizada com sucesso!");
   };
 
   const deletarTask = async (id: number) => {
@@ -109,6 +115,8 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       method: "DELETE",
     });
     await obterTasks();
+    toast.success("Tarefa deletada com sucesso!", {
+      icon: "🗑️" ,});
   };
 
   const alterarTaskStatus = async (id: number, isCompleted: boolean) => {
@@ -120,6 +128,12 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       },
     });
     await obterTasks();
+    toast.success(
+      `Tarefa ${isCompleted ? "concluída" : "reativada"} com sucesso!`,
+      {
+        icon: isCompleted ? "✅" : "🔄",
+      }
+    );
   };
 
   const obterTaskPorId = async (id: number) => {
