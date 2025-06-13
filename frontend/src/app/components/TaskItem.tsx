@@ -11,7 +11,6 @@ import { Task } from "../types/Task";
 import TaskDetailModal from "./TaskDetailModal";
 
 import ReactMarkdown from "react-markdown";
-import { IoDocumentAttach } from "react-icons/io5";
 //import { Tooltip } from "react-tooltip";
 
 export interface ConfirmModalProps {
