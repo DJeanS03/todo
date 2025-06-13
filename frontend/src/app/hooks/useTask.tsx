@@ -34,6 +34,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [task, setTask] = useState<Task>({
     title: "",
+    description: "",
     isCompleted: false,
     priority: "NONE",
   });
@@ -78,7 +79,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
         "Content-Type": "application/json",
       },
     });
-    setTask({ title: "", isCompleted: false, priority: "NONE" });
+    setTask({ title: "", description: "", isCompleted: false, priority: "NONE" });
     await obterTasks();
 
     toast("Nova tarefa criada!", {
@@ -105,7 +106,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       },
     });
 
-    setTask({ title: "", isCompleted: false, priority: "NONE" });
+    setTask({ title: "", description: "", isCompleted: false, priority: "NONE" });
     await obterTasks();
     toast.success("Tarefa atualizada com sucesso!");
   };

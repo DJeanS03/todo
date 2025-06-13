@@ -1,5 +1,5 @@
 "use client";
-import { FaCheck, FaRegTrashAlt } from "react-icons/fa";
+import { FaCheck, FaRegListAlt, FaRegTrashAlt } from "react-icons/fa";
 import { LuPencil } from "react-icons/lu";
 import { useTasks } from "../hooks/useTask";
 import { IoIosFlag } from "react-icons/io";
@@ -7,6 +7,11 @@ import { useEffect, useState } from "react";
 import TaskPrioritySelect from "./TaskPrioritySelect";
 import ConfirmModal from "./ConfirmModal";
 import { AnimatePresence, motion } from "framer-motion"; // ✨ Importar motion
+import { Task } from "../types/Task";
+import TaskDetailModal from "./TaskDetailModal";
+
+import ReactMarkdown from "react-markdown";
+//import { Tooltip } from "react-tooltip";
 
 export interface ConfirmModalProps {
   isOpen: boolean;
@@ -31,6 +36,7 @@ export function RenderizarTasks() {
   const [showModal, setShowModal] = useState(false);
   const [edicaoPendenteId, setEdicaoPendenteId] = useState<number | null>(null);
   const [shouldRemainCompleted, setShouldRemainCompleted] = useState(true);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => {
@@ -132,6 +138,15 @@ export function RenderizarTasks() {
     },
   };
 
+  const handleOpenModal = (task: Task) => {
+    setSelectedTask(task);
+  };
+
+  const handleSaveModal = async (updatedTask: Task) => {
+    await editarTask(updatedTask);
+    setSelectedTask(null);
+  };
+
   return (
     <div className="flex flex-col gap-2">
       <AnimatePresence>
@@ -140,6 +155,14 @@ export function RenderizarTasks() {
           return (
             <motion.div
               key={task.id}
+              onClick={(e) => {
+                if (
+                  (e.target as HTMLElement).tagName !== "svg" &&
+                  (e.target as HTMLElement).tagName !== "path"
+                ) {
+                  handleOpenModal(task);
+                }
+              }}
               className={`flex items-center gap-4 px-4 py-2 rounded-md justify-between 
                           ${
                             task.isCompleted
@@ -191,13 +214,29 @@ export function RenderizarTasks() {
                 </div>
               ) : (
                 <span
-                  className={`flex-grow ${
+                  className={`flex-grow flex items-center gap-1 ${
                     task.isCompleted
                       ? "line-through text-zinc-400"
                       : "text-white"
                   }`}
                 >
                   {task.title}
+                  {task.description && task.description.trim() !== "" && (
+                    <div className="group relative">
+                      <span
+                        className="text-blue-400 text-xs cursor-pointer"
+                        title="Possui descrição"
+                      >
+                        <FaRegListAlt size={15}/>
+                      </span>
+
+                      <div className="absolute hidden group-hover:flex flex-col bg-zinc-900 text-white p-3 rounded-md shadow-md z-50 w-64 top-6 left-1/2 -translate-x-1/2">
+                        <div className="prose prose-sm prose-invert">
+                          <ReactMarkdown>{task.description}</ReactMarkdown>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </span>
               )}
 
@@ -255,6 +294,26 @@ export function RenderizarTasks() {
             </motion.div>
           );
         })}
+
+        {selectedTask && (
+          <TaskDetailModal
+            task={{
+              ...selectedTask,
+              id: selectedTask.id !== undefined ? String(selectedTask.id) : "",
+            }}
+            onClose={() => setSelectedTask(null)}
+            onSave={async (updatedTask) => {
+              await handleSaveModal({
+                ...updatedTask,
+                id:
+                  typeof updatedTask.id === "string"
+                    ? Number(updatedTask.id)
+                    : updatedTask.id,
+              });
+              setSelectedTask(null);
+            }}
+          />
+        )}
       </AnimatePresence>
       <AnimatePresence>
         {showModal && (
@@ -287,7 +346,6 @@ import { IoIosFlag } from "react-icons/io";
 import { useEffect, useState } from "react";
 import TaskPrioritySelect from "./TaskPrioritySelect";
 import ConfirmModal from "./ConfirmModal";
-
 
 export function RenderizarTasks() {
   const { tasks, alterarTaskStatus, deletarTask, editarTask } = useTasks();
@@ -425,6 +483,14 @@ export function RenderizarTasks() {
                 }`}
               >
                 {task.title}
+                {task.description && task.description.trim() !== "" && (
+                  <span
+                    className="text-blue-400 text-xs cursor-pointer"
+                    title="Possui descrição"
+                  >
+                    📄
+                  </span>
+                )}
               </span>
             )}
 
@@ -479,7 +545,7 @@ export function RenderizarTasks() {
           setEdicaoPendenteId(null);
         }}
         onConfirm={async () => {
-          setManterConcluida(false); 
+          setManterConcluida(false);
           await confirmarEdicaoComStatus();
         }}
         title="Deseja ativar a tarefa com essa edição?"

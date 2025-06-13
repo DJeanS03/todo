@@ -6,7 +6,8 @@ POST  http://localhost:3001/tasks
 Content-Type: application/json
   
 {
-  "title": "Task 2TESTE",
+  "title": "Task",
+  "description": "Task description",
   "isCompleted": false,
   "priority": "HIGH"
 }
