@@ -17,6 +17,7 @@ enum Priority {
 model Task {
   id          Int      @id @default(autoincrement())
   title       String
+  description String?  @default("")
   isCompleted Boolean  @default(false)
   createdAt   DateTime @default(now())
   priority    Priority @default(NONE)
