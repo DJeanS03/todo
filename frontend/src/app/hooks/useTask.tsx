@@ -10,7 +10,7 @@ import {
 import { Task } from "../types/Task";
 import toast from "react-hot-toast";
 
-interface TaskContextType {
+export interface TaskContextType {
   tasks: Task[];
   task: Task;
   setTask: React.Dispatch<React.SetStateAction<Task>>;

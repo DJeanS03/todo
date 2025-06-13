@@ -1,4 +1,5 @@
 import { useTasks } from "../hooks/useTask";
+import { ExportTasks } from "./ExportTasks";
 import TaskPrioritySelect from "./TaskPrioritySelect";
 
 export function RenderizarFormTask() {
@@ -15,10 +16,11 @@ export function RenderizarFormTask() {
         onKeyDown={(e) => {
           if (e.key === "Enter") {
             criarTask();
-            (window as Window & { showToast?: (title: string, message: string) => void }).showToast?.(
-              "Tarefa criada",
-              "Sua nova tarefa foi adicionada."
-            );
+            (
+              window as Window & {
+                showToast?: (title: string, message: string) => void;
+              }
+            ).showToast?.("Tarefa criada", "Sua nova tarefa foi adicionada.");
           }
         }}
       />
@@ -42,6 +44,10 @@ export function RenderizarFormTask() {
           Criar
         </button>
       )}
+
+      <div>
+        <ExportTasks />
+      </div>
     </div>
   );
 }
