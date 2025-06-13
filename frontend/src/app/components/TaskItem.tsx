@@ -119,13 +119,13 @@ export function RenderizarTasks() {
 
   const editVariants = {
     editing: {
-      backgroundColor: "#3f3f46", 
+      backgroundColor: "#3f3f46",
       scale: 1.02,
       boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
       transition: { type: "spring", stiffness: 300, damping: 20 },
     },
     notEditing: {
-      backgroundColor: "#27272a", 
+      backgroundColor: "#27272a",
       scale: 1,
       boxShadow: "none",
       transition: { type: "spring", stiffness: 300, damping: 20 },
@@ -138,22 +138,22 @@ export function RenderizarTasks() {
         {tasks.map((task) => {
           const isEditing = editandoId === task.id;
           return (
-            <motion.div 
+            <motion.div
               key={task.id}
               className={`flex items-center gap-4 px-4 py-2 rounded-md justify-between 
                           ${
                             task.isCompleted
                               ? "bg-zinc-600 opacity-80"
                               : "bg-zinc-800"
-                          }`} 
+                          }`}
               variants={isEditing ? editVariants : itemVariants}
               initial={isEditing ? false : "hidden"}
               animate={
                 isEditing ? (isEditing ? "editing" : "notEditing") : "visible"
               }
               exit={isEditing ? undefined : "exit"}
-              layout 
-              whileHover={{ scale: 1.01 }} 
+              layout
+              whileHover={{ scale: 1.01 }}
               transition={{ duration: 0.2, ease: "easeInOut" }}
             >
               <input
@@ -214,7 +214,7 @@ export function RenderizarTasks() {
 
               <div className="flex gap-2 items-center">
                 {isEditing ? (
-                  <motion.button 
+                  <motion.button
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={() => task.id && salvarEdicao(task.id)}
