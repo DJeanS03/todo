@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import { FaRegTimesCircle } from "react-icons/fa";
 import TaskPrioritySelect from "./TaskPrioritySelect";
-import ConfirmModal from "./ConfirmModal"; // Importar o ConfirmModal
-import { AnimatePresence } from "framer-motion";
+import ConfirmModal from "./ConfirmModal";
+import { AnimatePresence, motion } from "framer-motion"; // ✨ Importar motion e AnimatePresence
 
 interface Task {
-  id: string; // Mantido como string no modal para consistência
+  id: string;
   title: string;
   description?: string;
   priority: "NONE" | "LOW" | "MEDIUM" | "HIGH";
@@ -29,7 +29,9 @@ export default function TaskDetailModal({
 
   // Estados para o ConfirmModal
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [shouldRemainCompleted, setShouldRemainCompleted] = useState(task.isCompleted);
+  const [shouldRemainCompleted, setShouldRemainCompleted] = useState(
+    task.isCompleted
+  );
 
   // Fechar modal com a tecla Esc
   useEffect(() => {
@@ -108,14 +110,51 @@ export default function TaskDetailModal({
 
   const cancelConfirmModal = () => {
     setShowConfirmModal(false);
-    // Não precisa chamar onClose() aqui, pois o TaskDetailModal permanece aberto
   };
 
+  const backdropVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
+    exit: { opacity: 0 },
+  };
+
+  const modalVariants = {
+    hidden: { opacity: 0, scale: 0.8 }, 
+    visible: {
+      opacity: 1,
+      scale: 1, 
+      transition: {
+        type: "spring",
+        damping: 25,
+        stiffness: 500,
+        delay: 0.1,
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.8, 
+      transition: { duration: 0.2 },
+    },
+  };
 
   return (
-    <>
-      <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-        <div className="bg-zinc-900 p-6 rounded-lg w-full max-w-md shadow-md flex flex-col gap-4">
+    <AnimatePresence>
+      <motion.div 
+        className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
+        variants={backdropVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        onClick={onClose}
+      >
+        <motion.div 
+          className="bg-zinc-900 p-6 rounded-lg w-full max-w-md shadow-md flex flex-col gap-4"
+          variants={modalVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="flex justify-between items-center">
             <h2 className="text-xl text-white">Detalhes da Tarefa</h2>
             <FaRegTimesCircle
@@ -125,7 +164,6 @@ export default function TaskDetailModal({
             />
           </div>
 
-          {/* Sinalização de tarefa concluída dentro do modal */}
           {task.isCompleted && (
             <p className="text-yellow-400 text-sm italic">
               Esta tarefa já foi concluída. Edite com cautela.
@@ -145,10 +183,7 @@ export default function TaskDetailModal({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
-            <TaskPrioritySelect
-              priority={priority}
-              onChange={setPriority}
-            />
+            <TaskPrioritySelect priority={priority} onChange={setPriority} />
           </div>
 
           <textarea
@@ -172,8 +207,8 @@ export default function TaskDetailModal({
               Salvar
             </button>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
 
       <AnimatePresence>
         {showConfirmModal && (
@@ -201,6 +236,6 @@ export default function TaskDetailModal({
           />
         )}
       </AnimatePresence>
-    </>
+    </AnimatePresence>
   );
 }
