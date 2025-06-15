@@ -6,63 +6,93 @@ type Priority = "NONE" | "LOW" | "MEDIUM" | "HIGH";
 interface TaskPrioritySelectProps {
   priority: Priority;
   onChange: (priority: Priority) => void;
+  // ✨ Nova prop para controlar o tamanho
+  size?: "sm" | "md" | "lg" | "xl"; 
 }
 
-export default function TaskPrioritySelect({ priority, onChange }: TaskPrioritySelectProps) {
+export default function TaskPrioritySelect({
+  priority,
+  onChange,
+  size = "md",
+}: TaskPrioritySelectProps) {
   const [showOptions, setShowOptions] = useState(false);
 
   const handleSelectOption = (newPriority: Priority) => {
-    onChange(newPriority); // avisa quem está usando o componente
+    onChange(newPriority);
     setShowOptions(false);
   };
+
+  const iconSizeClass = {
+    sm: "text-base",
+    md: "text-lg",
+    lg: "text-xl",
+    xl: "text-2xl",
+  }[size];
+
+  const paddingClass = {
+    sm: "px-1.5 py-0.5",
+    md: "px-2 py-1",
+    lg: "px-3 py-1.5",
+    xl: "px-4 py-2",
+  }[size];
+
+  const fontSizeClass = {
+    sm: "text-sm",
+    md: "text-base",
+    lg: "text-lg",
+    xl: "text-xl",
+  }[size];
 
   return (
     <div className="relative">
       <div
-        className="custom-select border border-zinc-800 px-2 py-1 rounded-md cursor-pointer"
+        className={`custom-select cursor-pointer flex items-center justify-center ${paddingClass} hover:bg-gray-200 rounded-md transition-colors duration-200 ${fontSizeClass}`}
         onClick={() => setShowOptions(!showOptions)}
+        title="Prioridade da tarefa"
       >
         <IoIosFlag
-          className={`text-${
+          className={`${iconSizeClass} ${
             priority === "NONE"
-              ? "zinc-500"
+              ? "text-zinc-500"
               : priority === "LOW"
-              ? "blue-500"
+              ? "text-blue-500"
               : priority === "MEDIUM"
-              ? "yellow-500"
-              : "red-500"
+              ? "text-yellow-500"
+              : "text-red-500"
           }`}
         />
       </div>
 
       {showOptions && (
-        <div className="absolute bg-white border border-zinc-800 mt-1 rounded-md w-full z-10 min-w-[120px]">
+        <div
+          className={`absolute bg-white border border-zinc-800 mt-1 rounded-md w-full z-10 min-w-[120px] ${fontSizeClass}`}
+        >
           <div
             className="option px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center justify-start w-full"
             onClick={() => handleSelectOption("NONE")}
           >
-            <IoIosFlag className="text-zinc-500 mr-1" />
+            <IoIosFlag className={`${iconSizeClass} text-zinc-500 mr-1`} />
             Nenhuma
           </div>
           <div
             className="option px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center justify-start w-full"
             onClick={() => handleSelectOption("LOW")}
           >
-            <IoIosFlag className="text-blue-500 mr-1" />
+            <IoIosFlag className={`${iconSizeClass} text-blue-500 mr-1`} />
             Baixa
           </div>
           <div
             className="option px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center justify-start w-full"
             onClick={() => handleSelectOption("MEDIUM")}
           >
-            <IoIosFlag className="text-yellow-500 mr-1" />
+            <IoIosFlag className={`${iconSizeClass} text-yellow-500 mr-1`} />
             Média
           </div>
           <div
             className="option px-3 py-2 cursor-pointer hover:bg-gray-200 flex items-center justify-start w-full"
             onClick={() => handleSelectOption("HIGH")}
           >
-            <IoIosFlag className="text-red-500 mr-1" />
+            <IoIosFlag className={`${iconSizeClass} text-red-500 mr-1`} />
             Alta
           </div>
         </div>

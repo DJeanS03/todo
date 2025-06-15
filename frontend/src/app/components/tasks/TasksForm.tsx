@@ -103,6 +103,7 @@ export function RenderizarFormTask() {
               onChange={(newPriority) =>
                 setTask({ ...task, priority: newPriority })
               }
+              size="md"
             />
 
             <button
