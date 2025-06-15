@@ -1,5 +1,5 @@
-import { useTasks } from "../hooks/useTask";
-import { Task } from "../types/Task";
+import { useTasks } from "../../hooks/useTask";
+import { Task } from "../../types/Task";
 
 export function ExportTasks() {
   const { tasks } = useTasks();
@@ -14,11 +14,8 @@ export function ExportTasks() {
     ]);
 
     const csvContent = [headers, ...rows]
-      .map(
-        (row) =>
-          row
-            .map((field) => `"${String(field).replace(/"/g, '""')}"`) 
-            .join(";")
+      .map((row) =>
+        row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(";")
       )
       .join("\r\n");
 

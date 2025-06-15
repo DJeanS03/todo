@@ -1,9 +1,10 @@
-// components/TaskDetailModal.tsx
 import { useEffect, useState } from "react";
 import { FaRegTimesCircle } from "react-icons/fa";
-import TaskPrioritySelect from "./TaskPrioritySelect";
+import TaskPrioritySelect from "../tasks/TaskPrioritySelect";
 import ConfirmModal from "./ConfirmModal";
 import { AnimatePresence, motion } from "framer-motion"; // ✨ Importar motion e AnimatePresence
+import Input from "../ui/Input";
+import Textarea from "../ui/Textarea";
 
 interface Task {
   id: string;
@@ -119,10 +120,10 @@ export default function TaskDetailModal({
   };
 
   const modalVariants = {
-    hidden: { opacity: 0, scale: 0.8 }, 
+    hidden: { opacity: 0, scale: 0.8 },
     visible: {
       opacity: 1,
-      scale: 1, 
+      scale: 1,
       transition: {
         type: "spring",
         damping: 25,
@@ -132,14 +133,14 @@ export default function TaskDetailModal({
     },
     exit: {
       opacity: 0,
-      scale: 0.8, 
+      scale: 0.8,
       transition: { duration: 0.2 },
     },
   };
 
   return (
     <AnimatePresence>
-      <motion.div 
+      <motion.div
         className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50"
         variants={backdropVariants}
         initial="hidden"
@@ -147,7 +148,7 @@ export default function TaskDetailModal({
         exit="exit"
         onClick={onClose}
       >
-        <motion.div 
+        <motion.div
           className="bg-zinc-900 p-6 rounded-lg w-full max-w-md shadow-md flex flex-col gap-4"
           variants={modalVariants}
           initial="hidden"
@@ -177,20 +178,18 @@ export default function TaskDetailModal({
               checked={isCompleted}
               onChange={() => setIsCompleted(!isCompleted)}
             />
-            <input
-              type="text"
-              className="bg-neutral-800 px-3 py-2 rounded-md w-full text-white"
+            <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
+              placeholder="Título da tarefa"
             />
             <TaskPrioritySelect priority={priority} onChange={setPriority} />
           </div>
 
-          <textarea
-            className="bg-neutral-800 px-3 py-2 rounded-md w-full resize-none h-28 text-white"
-            placeholder="Descrição da tarefa"
+          <Textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            placeholder="Descrição detalhada da tarefa"
           />
 
           <div className="flex justify-end gap-2">

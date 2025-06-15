@@ -1,12 +1,11 @@
 "use client";
 
-import { RenderizarFormTask } from "./components/TasksForm";
-import { RenderizarTasks } from "./components/TaskItem";
+import { RenderizarFormTask } from "./components/tasks/TasksForm";
+import { RenderizarTasks } from "./components/tasks/TaskItem";
 import { useTasks, TasksProvider } from "./hooks/useTask";
 import { FaTasks } from "react-icons/fa";
 //import { ToasterProvider } from "./components/ToasterProvider";
 import { Toaster } from "react-hot-toast";
-
 
 function MainContent() {
   const { tasks, sortType, setSortType } = useTasks();

@@ -1,4 +1,3 @@
-// components/ConfirmModal.tsx
 "use client";
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -32,7 +31,7 @@ export default function ConfirmModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onClose} // Fecha o modal ao clicar fora
+          onClick={onClose} 
         >
           <motion.div
             className="bg-zinc-900 text-white p-6 rounded-lg max-w-sm w-full shadow-lg"
