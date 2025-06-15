@@ -67,7 +67,6 @@ export default function TaskDetailModal({
         // O isCompleted no modal de confirmação começará com o valor atual do checkbox
         setShouldRemainCompleted(isCompleted);
       } else {
-        // Nenhuma alteração significativa ou o status de concluída não mudou, salva diretamente
         onSave({
           ...task,
           title,
@@ -172,18 +171,12 @@ export default function TaskDetailModal({
           )}
 
           <div className="flex items-center gap-3">
-            <input
-              type="checkbox"
-              className="form-checkbox h-5 w-5 text-blue-500 focus:ring-blue-500 transition duration-300"
-              checked={isCompleted}
-              onChange={() => setIsCompleted(!isCompleted)}
-            />
             <Input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Título da tarefa"
             />
-            <TaskPrioritySelect priority={priority} onChange={setPriority} />
+            <TaskPrioritySelect priority={priority} onChange={setPriority} size="lg"/>
           </div>
 
           <Textarea
