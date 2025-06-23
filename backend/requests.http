@@ -13,3 +13,14 @@ Content-Type: application/json
 }
 
 ###
+POST http://localhost:3001/auth/register
+Content-Type: application/json
+
+{
+  "name": "Jean Victor",
+  "email": "jean@example.com",
+  "password": "123456"
+}
+
+###
+GET http://localhost:3001/auth/register/
