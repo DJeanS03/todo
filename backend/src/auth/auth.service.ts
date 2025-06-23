@@ -44,10 +44,15 @@ export class AuthService {
       return null;
     }
 
-    const token = this.jwtService.sign({
-      id: user.id,
-      email: user.email,
-    });
+    const token = this.jwtService.sign(
+      {
+        id: user.id,
+        email: user.email,
+      },
+      {
+        expiresIn: '2h',
+      },
+    );
 
     return {
       token,
