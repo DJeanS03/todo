@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/axios"; 
 
 interface User {
   id: number;
@@ -41,13 +41,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       token: string;
       user: User;
     }
-    const res = await axios.post<LoginResponse>(
-      "http://localhost:3001/auth/login",
-      {
-        email,
-        password,
-      }
-    );
+    const res = await api.post<LoginResponse>("/auth/login", {
+      email,
+      password,
+    });
 
     setToken(res.data.token);
     setUser(res.data.user);
@@ -57,7 +54,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const register = async (name: string, email: string, password: string) => {
-    await axios.post("http://localhost:3001/auth/register", {
+    await api.post("http://localhost:3001/auth/register", {
       name,
       email,
       password,
