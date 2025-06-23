@@ -4,8 +4,12 @@ import {
   Post,
   HttpException,
   HttpStatus,
+  Get,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -31,5 +35,37 @@ export class AuthController {
         email: user.email,
       },
     };
+  }
+
+  @Post('login')
+  async login(@Body() body: { email: string; password: string }) {
+    const { email, password } = body;
+
+    const result = await this.authService.login(email, password);
+
+    if (!result) {
+      throw new HttpException('Credenciais inválidas', HttpStatus.UNAUTHORIZED);
+    }
+
+    return {
+      message: 'Login realizado com sucesso',
+      token: result.token,
+      user: result.user,
+    };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('users')
+  async getAllUsers(@Request() req: { user: any }) {
+    console.log('Usuário autenticado:', req.user);
+
+    const users = await this.authService.getAllUsers();
+
+    return users.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      createdAt: user.createdAt,
+    }));
   }
 }
