@@ -7,6 +7,9 @@ import {
   Get,
   UseGuards,
   Request,
+  Delete,
+  Patch,
+  Param,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -67,5 +70,25 @@ export class AuthController {
       email: user.email,
       createdAt: user.createdAt,
     }));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('users/:id')
+  async deleteUser(@Param('id') id: string) {
+    return this.authService.deleteUser(Number(id));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('users/:id')
+  async updateUser(
+    @Param('id') id: string,
+    @Body()
+    body: {
+      name?: string;
+      email?: string;
+      password?: string;
+    },
+  ) {
+    return this.authService.updateUser(Number(id), body);
   }
 }
