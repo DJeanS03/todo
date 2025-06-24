@@ -24,6 +24,7 @@ export class AuthService {
         name,
         email,
         password: hashedPassword,
+        role: 'USER',
       },
     });
 
@@ -32,7 +33,13 @@ export class AuthService {
 
   // Login
   async login(email: string, password: string) {
-    const user = await prisma.user.findUnique({ where: { email } });
+    const user = (await prisma.user.findUnique({ where: { email } })) as {
+      id: number;
+      name: string;
+      email: string;
+      password: string;
+      role: string;
+    } | null;
 
     if (!user) {
       return null;
@@ -46,8 +53,9 @@ export class AuthService {
 
     const token = this.jwtService.sign(
       {
-        id: user.id,
+        sub: user.id,
         email: user.email,
+        role: user.role,
       },
       {
         expiresIn: '2h',
@@ -57,9 +65,10 @@ export class AuthService {
     return {
       token,
       user: {
-        id: user.id,
+        sub: user.id,
         name: user.name,
         email: user.email,
+        role: user.role,
       },
     };
   }
@@ -77,9 +86,14 @@ export class AuthService {
 
   async updateUser(
     id: number,
-    body: { name?: string; email?: string; password?: string },
+    body: { name?: string; email?: string; password?: string; role?: string },
   ) {
-    const updateData: { name?: string; email?: string; password?: string } = {};
+    const updateData: {
+      name?: string;
+      email?: string;
+      password?: string;
+      role?: string;
+    } = {};
 
     if (body.name) updateData.name = body.name;
     if (body.email) updateData.email = body.email;

@@ -13,6 +13,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { Roles } from './roles.decorator';
+import { RolesGuard } from './roles.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -57,20 +59,37 @@ export class AuthController {
     };
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'ADMIN')
   @Get('users')
   async getAllUsers(@Request() req: { user: any }) {
     console.log('Usuário autenticado:', req.user);
 
     const users = await this.authService.getAllUsers();
 
-    return users.map((user) => ({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      createdAt: user.createdAt,
-    }));
+    return users.map(
+      (user: {
+        id: number;
+        name: string;
+        email: string;
+        role: string;
+        createdAt: Date;
+      }) => ({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        createdAt: user.createdAt,
+      }),
+    );
   }
+
+  /*   @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin', 'ADMIN')
+  @Get('users')
+  findAllUsers() {
+    return this.authService.getAllUsers();
+  } */
 
   @UseGuards(JwtAuthGuard)
   @Delete('users/:id')

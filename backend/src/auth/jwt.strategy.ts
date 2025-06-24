@@ -6,13 +6,18 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(), // Lê o token do header Authorization
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: process.env.JWT_SECRET || 'secretaço', // Mesmo secret usado no auth.module.ts
+      secretOrKey: process.env.JWT_SECRET || 'secretaço',
     });
   }
 
-  validate(payload: { id: number; email: string }) {
-    return { id: payload.id, email: payload.email };
+  validate(payload: { sub: number; email: string; role: string }) {
+    console.log('Payload JWT Strategy:', payload);
+    return {
+      id: payload.sub,
+      email: payload.email,
+      role: payload.role,
+    };
   }
 }
