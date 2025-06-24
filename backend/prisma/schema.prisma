@@ -14,19 +14,25 @@ enum Priority {
   HIGH
 }
 
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  role      String   @default("USER")
+
+  tasks Task[]
+}
+
 model Task {
   id          Int      @id @default(autoincrement())
   title       String
-  description String?  @default("")
+  description String?
   isCompleted Boolean  @default(false)
+  priority    String   @default("NONE")
   createdAt   DateTime @default(now())
-  priority    Priority @default(NONE)
-}
 
-model User {
-  id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  password String
-  createdAt DateTime @default(now())
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }

@@ -1,4 +1,6 @@
-export interface CreateTaskDto {
-    title: string;
-    isCompleted: boolean;
+export class CreateTaskDto {
+  title: string;
+  description?: string;
+  isCompleted?: boolean;
+  priority?: string;
 }
