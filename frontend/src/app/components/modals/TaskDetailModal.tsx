@@ -26,6 +26,7 @@ export default function TaskDetailModal({
   const [title, setTitle] = useState(task.title);
   const [description, setDescription] = useState(task.description || "");
   const [priority, setPriority] = useState(task.priority);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isCompleted, setIsCompleted] = useState(task.isCompleted);
 
   // Estados para o ConfirmModal
