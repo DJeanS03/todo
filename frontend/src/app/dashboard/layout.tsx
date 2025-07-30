@@ -13,7 +13,7 @@ export default function DashboardLayout({
   return (
     <PrivateRoute>
       <TasksProvider>
-        <div className="min-h-screen flex flex-col bg-gray-50">
+        <div className="min-h-screen flex flex-col bg-zinc-700">
           <Header />
           <main className="flex-1 px-4 py-6 flex justify-center">
             <div className="w-full max-w-4xl">{children}</div>

@@ -1,17 +1,19 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import api from "../utils/axios"; 
+import api from "../utils/axios";
 
 interface User {
   id: number;
   name: string;
   email: string;
+  role: string;
 }
 
 interface AuthContextType {
   user: User | null;
   token: string | null;
+  role: "ADMIN" | "USER";
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
@@ -68,9 +70,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("user");
   };
 
+  // Derive role from user or set a default
+  const role: "ADMIN" | "USER" = user?.role === "ADMIN" ? "ADMIN" : "USER";
+
   return (
     <AuthContext.Provider
-      value={{ user, token, loading, login, register, logout }}
+      value={{ user, token, loading, login, register, logout, role }}
     >
       {children}
     </AuthContext.Provider>

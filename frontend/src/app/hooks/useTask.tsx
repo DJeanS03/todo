@@ -9,6 +9,7 @@ import {
 } from "react";
 import { Task } from "../types/Task";
 import toast from "react-hot-toast";
+import { useAuth } from "../context/AuthContext";
 
 export interface TaskContextType {
   tasks: Task[];
@@ -31,6 +32,7 @@ const TaskContext = createContext({} as TaskContextType);
 const API_URL = "http://localhost:3001/tasks";
 
 export function TasksProvider({ children }: { children: React.ReactNode }) {
+  const { user, token } = useAuth();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [task, setTask] = useState<Task>({
     title: "",
@@ -43,7 +45,14 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   );
 
   const obterTasks = useCallback(async () => {
-    const resp = await fetch(API_URL);
+    if (!token) return;
+
+    const resp = await fetch(API_URL, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
     const tasks = await resp.json();
 
     const prioridadeNumerica = { NONE: 0, LOW: 1, MEDIUM: 2, HIGH: 3 };
@@ -61,7 +70,7 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
     });
 
     setTasks(tasks);
-  }, [sortType]);
+  }, [sortType, token]);
 
   useEffect(() => {
     obterTasks();
@@ -72,19 +81,26 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       toast.error("O título da tarefa não pode estar vazio.");
       return;
     }
+
+    if (!token || !user) return;
+
     await fetch(`${API_URL}`, {
       method: "POST",
-      body: JSON.stringify(task),
+      body: JSON.stringify({ ...task, userId: user.id }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
-    setTask({ title: "", description: "", isCompleted: false, priority: "NONE" });
+    setTask({
+      title: "",
+      description: "",
+      isCompleted: false,
+      priority: "NONE",
+    });
     await obterTasks();
 
-    toast("Nova tarefa criada!", {
-      icon: "✅",
-    });
+    toast("Nova tarefa criada!", { icon: "✅" });
   };
 
   const editarTask = async (taskParaEditar: Task) => {
@@ -95,6 +111,8 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    if (!token) return;
+
     await fetch(`${API_URL}/${taskParaEditar.id}`, {
       method: "PATCH",
       body: JSON.stringify({
@@ -103,29 +121,42 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
       }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
 
-    setTask({ title: "", description: "", isCompleted: false, priority: "NONE" });
+    setTask({
+      title: "",
+      description: "",
+      isCompleted: false,
+      priority: "NONE",
+    });
     await obterTasks();
     toast.success("Tarefa atualizada com sucesso!");
   };
 
   const deletarTask = async (id: number) => {
+    if (!token) return;
+
     await fetch(`${API_URL}/${id}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
     await obterTasks();
-    toast.success("Tarefa deletada com sucesso!", {
-      icon: "🗑️" ,});
+    toast.success("Tarefa deletada com sucesso!", { icon: "🗑️" });
   };
 
   const alterarTaskStatus = async (id: number, isCompleted: boolean) => {
+    if (!token) return;
+
     await fetch(`${API_URL}/${id}`, {
       method: "PATCH",
       body: JSON.stringify({ isCompleted }),
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
     });
     await obterTasks();
@@ -138,7 +169,12 @@ export function TasksProvider({ children }: { children: React.ReactNode }) {
   };
 
   const obterTaskPorId = async (id: number) => {
-    const resp = await fetch(`${API_URL}/${id}`);
+    if (!token) return;
+    const resp = await fetch(`${API_URL}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const task = await resp.json();
     setTask(task);
   };
