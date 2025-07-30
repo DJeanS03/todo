@@ -12,4 +12,34 @@ Content-Type: application/json
   "priority": "HIGH"
 }
 
+//===================================================
+@token_admin = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJqZWFuQGV4YW1wbGUuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzUwNzY5OTI5LCJleHAiOjE3NTA3NzcxMjl9.d3ib3X_8Ltfpexl2rvHq6UGGjX1YMA4yuSTbzJIl21E
+@token_user = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJwaXZhc0BwaXZhcy5jb20iLCJpYXQiOjE3NTA3MTgxNDAsImV4cCI6MTc1MDcyNTM0MH0.7c-t1U6CUFfrUG8o_xmiKzlAm9uQt5pr6m8LWK5BbKg
+
 ###
+POST http://localhost:3001/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@example.com",
+  "password": "123456"
+}
+
+### PEGAR TASKS
+GET http://localhost:3001/tasks
+Authorization: Bearer {{token_admin}}
+
+### CRIAR TASK
+POST http://localhost:3001/tasks
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTA3NzIxNzksImV4cCI6MTc1MDc3OTM3OX0.0f-B4K3Ss1aYghT30WCKNIZuzSz1dvTOFYACphw_VY8
+Content-Type: application/json
+
+{
+  "title": "Fazer deploy",
+  "description": "Deploy da aplicação no Vercel",
+  "priority": "HIGH"
+}
+
+### PEGAR USUÁRIOS
+GET http://localhost:3001/auth/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjUsImVtYWlsIjoiYWRtaW5AZXhhbXBsZS5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3NTA3NzIxNzksImV4cCI6MTc1MDc3OTM3OX0.0f-B4K3Ss1aYghT30WCKNIZuzSz1dvTOFYACphw_VY8
