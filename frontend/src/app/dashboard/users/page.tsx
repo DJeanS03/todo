@@ -15,6 +15,8 @@ interface User {
   createdAt: string;
 }
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function UsersPage() {
   const { token } = useAuth();
   const router = useRouter();
@@ -31,7 +33,7 @@ export default function UsersPage() {
 
   const fetchUsers = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:3001/auth/users", {
+      const res = await fetch(`${API_URL}/auth/users`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -62,7 +64,7 @@ export default function UsersPage() {
     );
     if (!confirm) return;
 
-    await fetch(`http://localhost:3001/auth/users/${id}`, {
+    await fetch(`${API_URL}/auth/users/${id}`, {
       method: "DELETE",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -84,7 +86,7 @@ export default function UsersPage() {
   };
 
   const handleEditSave = async () => {
-    await fetch(`http://localhost:3001/auth/users/${editingUser?.id}`, {
+    await fetch(`${API_URL}/auth/users/${editingUser?.id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",

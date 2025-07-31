@@ -1,16 +1,15 @@
 // services/taskService.ts
 import { Task } from "../types/Task";
 
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL
-  }/tasks`;
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const getTasks = async (): Promise<Task[]> => {
-  const resp = await fetch(API_URL);
+  const resp = await fetch(`${API_URL}`);
   return await resp.json();
 };
 
 export const createTask = async (task: Task): Promise<void> => {
-  await fetch(API_URL, {
+  await fetch(`${API_URL}`, {
     method: "POST",
     body: JSON.stringify(task),
     headers: { "Content-Type": "application/json" },
