@@ -29,7 +29,7 @@ export interface TaskContextType {
 
 const TaskContext = createContext({} as TaskContextType);
 
-const API_URL = "http://localhost:3001/tasks";
+const API_URL = "https://todo-lwg0.onrender.com/tasks";
 
 export function TasksProvider({ children }: { children: React.ReactNode }) {
   const { user, token } = useAuth();
