@@ -1,7 +1,8 @@
 // services/taskService.ts
 import { Task } from "../types/Task";
 
-const API_URL = "http://localhost:3001/tasks";
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL
+  }/tasks`;
 
 export const getTasks = async (): Promise<Task[]> => {
   const resp = await fetch(API_URL);
