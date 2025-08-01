@@ -22,7 +22,7 @@ export default function DashboardPage() {
         <RenderizarFormTask />
       </div>
 
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between text-white bg-zinc-900 p-4 rounded-lg shadow-md">
+      <div className="flex flex-col md:flex-row gap-4 items-center justify-between bg-zinc-900 text-zinc-100 p-4 rounded-lg shadow-md">
         <div className="flex items-center gap-2">
           <p className="font-medium">Ordem:</p>
           <select
@@ -30,7 +30,7 @@ export default function DashboardPage() {
             onChange={(e) =>
               setSortType(e.target.value as "PRIORITY" | "ALPHABETICAL")
             }
-            className="border border-zinc-300 px-3 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-zinc-600"
+            className="border border-zinc-600 bg-zinc-800 text-zinc-100 px-3 py-1 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-zinc-400"
           >
             <option value="PRIORITY">Por prioridade</option>
             <option value="ALPHABETICAL">Ordem alfabética</option>
@@ -39,7 +39,7 @@ export default function DashboardPage() {
 
         <div className="flex items-center gap-2">
           <p className="font-medium">Tarefas Concluídas:</p>
-          <span className="bg-zinc-800 text-white px-3 py-1 rounded-md text-sm font-semibold">
+          <span className="bg-zinc-800 text-zinc-100 px-3 py-1 rounded-md text-sm font-semibold">
             {completedTasks.length} de {tasks.length}
           </span>
         </div>
@@ -60,7 +60,7 @@ export default function DashboardPage() {
         <div className="mt-4">
           <button
             onClick={() => setShowCompleted(!showCompleted)}
-            className="flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-300 transition"
+            className="flex items-center gap-2 text-sm text-zinc-400 hover:text-zinc-100 transition"
           >
             {showCompleted ? (
               <>
